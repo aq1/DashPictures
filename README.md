@@ -9,6 +9,7 @@
     * Python 3
     * Django 2
     * Celery
+    * Redis
 * Frontend
     * Yarn
     * Angular
