@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta content="charset=utf-8">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Pinterest Drawing Practice</title>
+</head>
+<body>
+<div class="app">
+    <form action="/login/" method="post">
+        {% csrf_token %}
+        <button type="submit" class="pinterest-login-button">
+            Log In with Pinterest
+        </button>
+    </form>
+    <div class="image-source-wrapper">
+        <a href="https://www.pinterest.ru/pin/736479345288262033/" target="_blank">
+            <button class="image-source">Image Source</button>
+        </a>
+    </div>
+</div>
+</body>
+<link rel="stylesheet" href="{% static 'pinterest_drawing_practice/css/index.css' %}">
+</html>

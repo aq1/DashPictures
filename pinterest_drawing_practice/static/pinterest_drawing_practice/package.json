@@ -1,0 +1,9 @@
+{
+  "name": "pinterest_drawing_practice",
+  "version": "1.0.0",
+  "description": "Practice drawing from your pinterest board",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "^1.7.5"
+  }
+}

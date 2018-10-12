@@ -1,0 +1,134 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width; 100%;
+    height: 100%;
+    font-size: 20px;
+    line-height: 25px;
+    font-family: "Helvetica Neue", "Helvetica", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", "ＭＳ Ｐゴシック", arial, sans-serif;
+}
+
+div#app {
+    margin: 0;
+    padding: 0;
+    width; 100%;
+    height: 100%;
+    display: flex;
+    background-color: #efefef;
+}
+
+div#app div {
+    padding: 10px;
+}
+
+div#app div#menu {
+    opacity: 1;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-left: 15px;
+    border-right: 1px solid #efefef;
+    box-shadow: 2px 0 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+div#app div#menu ul,
+div#app div#menu ul div {
+    transition: visibility 5s; 0.3s linear, opacity 0.3s linear;
+    margin: 0;
+    padding: 0;
+}
+
+div#app div#menu ul div.hidden {
+    opacity: 0;
+    display: none;
+}
+
+div#app div#menu ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+div#app div#menu ul li {
+    margin-bottom: 5px;
+    padding: 0;
+}
+
+div#app div#menu ul li button {
+    width: 100%;
+    border: 1px solid #909090;
+    color: black;
+    background-color: transparent;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    line-height: 20px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+div#app div#menu ul li button.selected {
+    border-left: 25px solid #909090;
+}
+
+div#app div#menu ul li button#start-button:disabled {
+    cursor: not-allowed;
+    color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+div#app div#menu ul li button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+div#app div#menu progress {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+div#app div#content {
+    display: flex;
+    flex: 5;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+div#app div#content img#drawing {
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    max-height: 100%;
+}
+
+ul.controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    align-items: stretch;
+}
+
+div#app div#menu ul.controls li {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex: 1;
+    margin: 0;
+    margin-right: 5px;
+    padding: 0;
+}
+
+div#app div#menu ul.controls li:last-child {
+    margin: 0;
+}
+
+div#app div#menu ul.controls li button {
+    flex-grow: 0;
+    padding: 5px;
+    font-size: 14px;
+}

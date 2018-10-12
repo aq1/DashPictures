@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta content="charset=utf-8">
+
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% verbatim %}
+<div id="app" ng-app="pinterestApp" ng-controller="BodyCtrl" ng-cloak>
+    <div id="menu">
+        <ul>
+            <li ng-show="!boards.length">
+                <span>{{ noBoardsMessage }}</span>
+            </li>
+            <li>
+                <button
+                        id="start-button"
+                        ng-show="boards.length"
+                        ng-disabled="startButtonDisabled()"
+                        disabled
+                        ng-click="toggleTimer()">
+                    <span ng-hide="drawingStarted">Start</span>
+                    <span ng-show="drawingStarted">Stop</span>
+                </button>
+            </li>
+            <div ng-hide="drawingStarted">
+                <li ng-repeat="board in boards">
+                    <button ng-click="toggleBoard(board)" ng-class="{selected: board.selected}">
+                        <span ng-show="board.selected">✓</span>
+                        <span>{{ board.name }}</span>
+                    </button>
+                </li>
+            </div>
+            <li ng-if="drawingStarted">
+                <progress ng-value="timer.value"></progress>
+            </li>
+            <li ng-show="drawingStarted">
+                <ul class="controls">
+                    <li>
+                        <button class="controls-button" ng-click="addToTimer(10)">
+                            +10
+                        </button>
+                    </li>
+                    <li>
+                        <button class="controls-button" ng-click="nextPicture()">
+                            Next
+                        </button>
+                    </li>
+                    <li>
+                        <button ng-hide="timer.isPaused" class="controls-button" ng-click="pauseTimer()">
+                            Pause
+                        </button>
+                        <button ng-show="timer.isPaused" class="controls-button" ng-click="startTimer()">
+                            Continue
+                        </button>
+                    </li>
+                </ul>
+            </li>
+            <li ng-show="drawingStarted">
+                <ul class="controls">
+                    <li>
+                        <button class="controls-button" ng-click="setTimerMax(30)">
+                            30s
+                        </button>
+                    </li>
+                    <li>
+                        <button class="controls-button" ng-click="setTimerMax(60)">
+                            1m
+                        </button>
+                    </li>
+                    <li>
+                        <button class="controls-button" ng-click="setTimerMax(120)">
+                            2m
+                        </button>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div id="content">
+        <img ng-show="pictureSrc" id ="drawing" ng-src="{{ pictureSrc }}" alt="">
+    </div>
+</div>
+{% endverbatim %}
+</body>
+<script src="{% static 'pinterest_drawing_practice/node_modules/angular/angular.js' %}"></script>
+<script src="{% static 'pinterest_drawing_practice/js/app.js' %}"></script>
+<link rel="stylesheet" href="{% static 'pinterest_drawing_practice/css/app.css' %}">
+</html>
