@@ -43,7 +43,6 @@ app.controller('BodyCtrl', ['$scope', '$http', '$interval', function($scope, $ht
             1 - ($scope.timer._value / $scope.timer.max),
             $scope.timer.max
         );
-        console.log(seconds);
     };
 
     $scope.setTimerMax = function(seconds) {
@@ -57,8 +56,8 @@ app.controller('BodyCtrl', ['$scope', '$http', '$interval', function($scope, $ht
                 $scope.nextPicture();
                 return;
             }
-            setTimer($scope.timer._value + 1);
-        }, 1000);
+            setTimer($scope.timer._value + 0.01);
+        }, 10);
         $scope.timer.isPaused = false;
     };
 
@@ -93,7 +92,7 @@ app.controller('BodyCtrl', ['$scope', '$http', '$interval', function($scope, $ht
     };
 
     $scope.addToTimer = function(seconds) {
-        var _value = Math.max(0, $scope.timer.value -= seconds);
+        var _value = Math.max(0, $scope.timer._value -= seconds);
         setTimer(_value);
     };
 

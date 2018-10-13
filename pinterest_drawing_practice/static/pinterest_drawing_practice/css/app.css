@@ -132,3 +132,7 @@ div#app div#menu ul.controls li button {
     padding: 5px;
     font-size: 14px;
 }
+
+div#app div#menu ul.controls li button.controls-button.active {
+    border-color: #bd081c;
+}

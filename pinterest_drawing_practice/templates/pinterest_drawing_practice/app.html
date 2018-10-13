@@ -62,17 +62,17 @@
             <li ng-show="drawingStarted">
                 <ul class="controls">
                     <li>
-                        <button class="controls-button" ng-click="setTimerMax(30)">
+                        <button ng-class="{active: timer.max == 30}" class="controls-button" ng-click="setTimerMax(30)">
                             30s
                         </button>
                     </li>
                     <li>
-                        <button class="controls-button" ng-click="setTimerMax(60)">
+                        <button ng-class="{active: timer.max == 60}" class="controls-button" ng-click="setTimerMax(60)">
                             1m
                         </button>
                     </li>
                     <li>
-                        <button class="controls-button" ng-click="setTimerMax(120)">
+                        <button ng-class="{active: timer.max == 120}" class="controls-button" ng-click="setTimerMax(120)">
                             2m
                         </button>
                     </li>
