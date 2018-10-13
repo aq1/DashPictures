@@ -52,7 +52,7 @@ app.controller('BodyCtrl', ['$scope', '$http', '$interval', function($scope, $ht
 
     $scope.startTimer = function() {
         $scope.timer.promise = $interval(function() {
-            if ($scope.timer._value == $scope.timer.max) {
+            if ($scope.timer._value >= $scope.timer.max) {
                 $scope.nextPicture();
                 return;
             }
