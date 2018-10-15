@@ -10,6 +10,7 @@
     * Django 2
     * Celery
     * Redis
+    * PostgreSQL (for production only, sqlite is fine for test run)
 * Frontend
     * Yarn
     * Angular
