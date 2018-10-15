@@ -1,4 +1,4 @@
-"""pinterest_drawing_practice URL Configuration
+"""dash_pictures URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from pinterest_drawing_practice.views import (
+from dash_pictures.views import (
 
     index_view,
     oauth_view,

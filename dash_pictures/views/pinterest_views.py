@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
-from pinterest_drawing_practice.models import Board, Pin
+from dash_pictures.models import Board, Pin
 
 
 @login_required(login_url='/')

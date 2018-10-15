@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('pinterest_id', models.CharField(max_length=255, unique=True)),
                 ('image_url', models.CharField(max_length=255)),
                 ('color', models.CharField(max_length=255)),
-                ('board', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pins', to='pinterest_drawing_practice.Board')),
+                ('board', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pins', to='dash_pictures.Board')),
             ],
         ),
         migrations.CreateModel(

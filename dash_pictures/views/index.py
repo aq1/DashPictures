@@ -6,7 +6,7 @@ def index_view(request):
         request.session['pins_history'] = []
         return render(
             request,
-            'pinterest_drawing_practice/app.html',
+            'dash_pictures/app.html',
         )
 
-    return render(request, 'pinterest_drawing_practice/index.html')
+    return render(request, 'dash_pictures/index.html')

@@ -8,9 +8,9 @@ from django.views.decorators.http import require_http_methods
 
 import requests
 
-from pinterest_drawing_practice.models import PinterestUser
-from pinterest_drawing_practice.views import index_view
-from pinterest_drawing_practice.tasks import pinterest_tasks
+from dash_pictures.models import PinterestUser
+from dash_pictures.views import index_view
+from dash_pictures.tasks import pinterest_tasks
 
 
 def oauth_view(request):

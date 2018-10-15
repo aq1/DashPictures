@@ -13,7 +13,7 @@ app.autodiscover_tasks()
 
 @shared_task()
 def get_pins(user_id, access_token):
-    from pinterest_drawing_practice.models import Board, Pin
+    from dash_pictures.models import Board, Pin
 
     pins = []
     pins_ids = set()
@@ -62,7 +62,7 @@ def get_pins(user_id, access_token):
 
 @shared_task()
 def get_boards(user_id, access_token):
-    from pinterest_drawing_practice.models import Board
+    from dash_pictures.models import Board
 
     r = requests.get(
         'https://api.pinterest.com/v1/me/boards/',

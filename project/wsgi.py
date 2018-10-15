@@ -1,5 +1,5 @@
 """
-WSGI config for pinterest_drawing_practice project.
+WSGI config for dash_pictures project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

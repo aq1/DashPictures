@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from pinterest_drawing_practice.models import (
+from dash_pictures.models import (
     PinterestUser,
     Board,
     Pin,

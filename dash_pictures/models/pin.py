@@ -1,6 +1,6 @@
 from django.db import models
 
-from pinterest_drawing_practice.models import Board
+from dash_pictures.models import Board
 
 
 class Pin(models.Model):
