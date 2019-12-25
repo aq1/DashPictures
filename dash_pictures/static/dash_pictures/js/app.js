@@ -13,7 +13,6 @@ let app = new Vue({
     el: '#app',
     data: {
         noBoardsMessage: 'No boards found',
-        inProgress: false,
         boards: [],
         src: null,
         timer: {
@@ -21,23 +20,21 @@ let app = new Vue({
             promise: null,
             _value: 60,
             value: 100,
-            isPaused: false,
+            isPaused: true,
         }
     },
+    computed: {
+        boardsSelected: function () {
+            return this.boards.filter(board => board.selected);
+        },
+        boardsUser: function () {
+            return this.boards.filter(board => !board.default);
+        },
+        boardsDefault: function () {
+            return this.boards.filter(board => board.default);
+        },
+    },
     methods: {
-        start: function () {
-            this.inProgress = true;
-            this.timer.value = 100;
-            this.timer._value = this.timer.max;
-            clearInterval(this.timer.promise);
-            this.getPin();
-            this.resume();
-        },
-        stop: function () {
-            this.inProgress = false;
-            this.timer.value = 100;
-            clearInterval(this.timer.promise);
-        },
         pause: function () {
             this.timer.isPaused = true;
             clearInterval(this.timer.promise);
@@ -46,6 +43,10 @@ let app = new Vue({
             this.timer.isPaused = false;
             let view = this;
             clearInterval(this.timer.promise);
+            if (!view.src) {
+                this.next();
+                return;
+            }
             this.timer.promise = setInterval(function () {
                 if (!view.src || view.timer.isPaused) {
                     return;
@@ -58,7 +59,20 @@ let app = new Vue({
             }, 1000);
         },
         next: function () {
-            this.start();
+            let view = this;
+            this.timer.value = 100;
+            this.timer._value = this.timer.max;
+            clearInterval(this.timer.promise);
+
+            this.src = null;
+            if (!this.boardsSelected) {
+                return;
+            }
+            _axios.get('get_pin/', {params: {boards: this.boardsSelected}}).then(function (r) {
+                view.src = r.data.image_url;
+                view.resume();
+            });
+
         },
         setTimerMax: function (value) {
             this.timer.max = value;
@@ -68,20 +82,6 @@ let app = new Vue({
         addTimerMax: function (value) {
             this.timer.max += value;
             this.timer._value += value;
-        },
-        getPin: function () {
-            let view = this;
-            let boards = [];
-            this.src = null;
-            for (let i = 0; i < this.boards.length; i++) {
-                if (!this.boards[i].selected) {
-                    continue;
-                }
-                boards.push(this.boards[i].id);
-            }
-            _axios.get('get_pin/', {params: {boards: boards}}).then(function (r) {
-                view.src = r.data.image_url;
-            });
         },
     },
     created: function () {
