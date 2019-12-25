@@ -1,109 +1,105 @@
-var app = angular.module('pinterestApp', []);
+const _axios = axios.create({
+    baseURL: '/api/',
+    timeout: 1000,
+    withCredentials: true,
+    headers: {
+        'xsrfCookieName': 'csrftoken',
+        'xsrfHeaderName': 'X-CSRFToken',
+    }
+});
 
 
-app.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.useXDomain = true;
-    $httpProvider.defaults.xsrfCookieName = "csrftoken";
-    $httpProvider.defaults.xsrfHeaderName = "X-CSRFToken";
-    $httpProvider.defaults.withCredentials = true;
-}]);
-
-
-
-app.controller('BodyCtrl', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
-
-    window.pinterestScope = $scope;
-    $scope.boards = [];
-    $scope.drawingStarted = false;
-    $scope.pictureSrc = null;
-    $scope.noBoardsMessage = 'Loading boards...';
-    $scope.timer = {
-        promise: null,
-        max: 60,
-        _value: 0,
-        value: 1,
-    };
-
-    $scope.toggleBoard = function(board) {
-        board.selected = !board.selected;
-    };
-
-    $scope.startButtonDisabled = function() {
-        return !Boolean($scope.boards.filter(board => board.selected).length);
-    };
-
-    var resetTimer = function() {
-        $scope.timer._value = 0;
-        $scope.timer.value = 1;
-    };
-
-    setTimer = function(seconds) {
-        $scope.timer._value = seconds;
-        $scope.timer.value = Math.min(
-            1 - ($scope.timer._value / $scope.timer.max),
-            $scope.timer.max
+let app = new Vue({
+    el: '#app',
+    data: {
+        noBoardsMessage: 'No boards found',
+        inProgress: false,
+        boards: [],
+        src: null,
+        timer: {
+            max: 60,
+            promise: null,
+            _value: 60,
+            value: 100,
+            isPaused: false,
+        }
+    },
+    methods: {
+        start: function () {
+            this.inProgress = true;
+            this.timer.value = 100;
+            this.timer._value = this.timer.max;
+            clearInterval(this.timer.promise);
+            this.getPin();
+            this.resume();
+        },
+        stop: function () {
+            this.inProgress = false;
+            this.timer.value = 100;
+            clearInterval(this.timer.promise);
+        },
+        pause: function () {
+            this.timer.isPaused = true;
+            clearInterval(this.timer.promise);
+        },
+        resume: function () {
+            this.timer.isPaused = false;
+            let view = this;
+            clearInterval(this.timer.promise);
+            this.timer.promise = setInterval(function () {
+                if (!view.src || view.timer.isPaused) {
+                    return;
+                }
+                view.timer._value -= 1;
+                view.timer.value = 100 * (view.timer._value / view.timer.max);
+                if (view.timer._value <= 0) {
+                    view.next();
+                }
+            }, 1000);
+        },
+        next: function () {
+            this.start();
+        },
+        setTimerMax: function (value) {
+            this.timer.max = value;
+            this.timer._value = value;
+            this.timer.value = 100;
+        },
+        addTimerMax: function (value) {
+            this.timer.max += value;
+            this.timer._value += value;
+        },
+        getPin: function () {
+            let view = this;
+            let boards = [];
+            this.src = null;
+            for (let i = 0; i < this.boards.length; i++) {
+                if (!this.boards[i].selected) {
+                    continue;
+                }
+                boards.push(this.boards[i].id);
+            }
+            _axios.get('get_pin/', {params: {boards: boards}}).then(function (r) {
+                view.src = r.data.image_url;
+            });
+        },
+    },
+    created: function () {
+        let view = this;
+        _axios.get('get_boards/').then(
+            function (response) {
+                view.boards = response.data.data.map(function (board) {
+                    board.selected = true;
+                    board.pins = [];
+                    return board;
+                });
+                if (view.boards.length) {
+                    view.noBoardsMessage = 'No boards found';
+                }
+            },
+            function () {
+                console.log('Error getting boards');
+            }
         );
-    };
-
-    $scope.setTimerMax = function(seconds) {
-        $scope.timer.max = seconds;
-        setTimer(0);
-    };
-
-    $scope.startTimer = function() {
-        $scope.timer.promise = $interval(function() {
-            if ($scope.timer._value >= $scope.timer.max) {
-                $scope.nextPicture();
-                return;
-            }
-            setTimer($scope.timer._value + 0.01);
-        }, 10);
-        $scope.timer.isPaused = false;
-    };
-
-    $scope.pauseTimer = function() {
-        $interval.cancel($scope.timer.promise);
-        $scope.timer.isPaused = true;
-    };
-
-    $scope.toggleTimer = function() {
-        $scope.drawingStarted = !$scope.drawingStarted;
-        if ($scope.drawingStarted) {
-            $scope.nextPicture();
-        } else {
-            $interval.cancel($scope.timer.promise);
-        }
-    };
-
-    $scope.nextPicture = function() {
-        $interval.cancel($scope.timer.promise);
-        resetTimer();
-        var boardIds = [];
-        for (var i = 0; i < $scope.boards.length; i++) {
-            if (!$scope.boards[i].selected) {
-                continue;
-            }
-            boardIds.push($scope.boards[i].id);
-        }
-        $http.get('/api/get_pin/', {params: {boards_ids: boardIds}}).then(function(r) {
-            $scope.pictureSrc = r.data.image_url;
-            $scope.startTimer();
-        });
-    };
-
-    $scope.addToTimer = function(seconds) {
-        var _value = Math.max(0, $scope.timer._value -= seconds);
-        setTimer(_value);
-    };
-
-    $http.get('/api/get_boards/').then(function(r) {
-        $scope.boards = r.data.data.map(function(board) {
-            board.selected = true;
-            board.pins = [];
-            return board;
-        });
-        if (!$scope.boards.length) {
-            $scope.noBoardsMessage = 'No boards found';
-        }
-    });
-}]);
+    }
+});

@@ -5,88 +5,125 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dash Pictures. Practice drawing using Pinterest boards</title>
 </head>
 <body>
 {% verbatim %}
-<div id="app" ng-app="pinterestApp" ng-controller="BodyCtrl" ng-cloak>
-    <div id="menu">
-        <ul>
-            <li ng-show="!boards.length">
-                <span>{{ noBoardsMessage }}</span>
-            </li>
-            <li>
-                <button
-                        id="start-button"
-                        ng-show="boards.length"
-                        ng-disabled="startButtonDisabled()"
-                        disabled
-                        ng-click="toggleTimer()">
-                    <span ng-hide="drawingStarted">Start</span>
-                    <span ng-show="drawingStarted">Stop</span>
-                </button>
-            </li>
-            <div ng-hide="drawingStarted">
-                <li ng-repeat="board in boards">
-                    <button ng-click="toggleBoard(board)" ng-class="{selected: board.selected}">
-                        <span ng-show="board.selected">✓</span>
-                        <span>{{ board.name }}</span>
-                    </button>
-                </li>
+<div id="app">
+    <div class="row">
+        <div class="col s12 m2" id="menu">
+            <div class="row" v-if="!inProgress">
+                <div class="col s12">
+                    <a class="waves-effect waves-teal btn-flat ctrl-btn" @click="start">Start</a>
+                </div>
             </div>
-            <li ng-if="drawingStarted">
-                <progress ng-value="timer.value"></progress>
-            </li>
-            <li ng-show="drawingStarted">
-                <ul class="controls">
-                    <li>
-                        <button class="controls-button" ng-click="addToTimer(10)">
-                            +10
-                        </button>
-                    </li>
-                    <li>
-                        <button class="controls-button" ng-click="nextPicture()">
-                            Next
-                        </button>
-                    </li>
-                    <li>
-                        <button ng-hide="timer.isPaused" class="controls-button" ng-click="pauseTimer()">
-                            Pause
-                        </button>
-                        <button ng-show="timer.isPaused" class="controls-button" ng-click="startTimer()">
-                            Continue
-                        </button>
-                    </li>
-                </ul>
-            </li>
-            <li ng-show="drawingStarted">
-                <ul class="controls">
-                    <li>
-                        <button ng-class="{active: timer.max == 30}" class="controls-button" ng-click="setTimerMax(30)">
+            <div class="row" v-if="inProgress">
+                <div class="col s12">
+                    <a class="waves-effect waves-teal btn-flat ctrl-btn" @click="stop">Stop</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <div class="progress" :class="{disabled: !inProgress}">
+                        <div class="determinate" style="width: 100%" :style="{width: timer.value + '%'}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="ctrl-row" :class="{disabled: !inProgress}">
+                <div class="row">
+                    <div class="col s4">
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           :class="{disabled: !inProgress}"
+                           @click="addTimerMax(10)"
+                        >+10s</a>
+                    </div>
+                    <div class="col s4">
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           v-if="!timer.isPaused"
+                           :class="{disabled: !inProgress}"
+                           @click="pause">
+                            <i class="material-icons">pause</i>
+                        </a>
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           v-if="timer.isPaused"
+                           @click="resume"
+                           :class="{disabled: !inProgress}">
+                            <i class="material-icons">play_arrow</i>
+                        </a>
+                    </div>
+                    <div class="col s4">
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           @click="next"
+                           :class="{disabled: !inProgress}">
+                            <i class="material-icons">fast_forward</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s4">
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           :class="{active: timer.max == 30}"
+                           @click="setTimerMax(30)">
                             30s
-                        </button>
-                    </li>
-                    <li>
-                        <button ng-class="{active: timer.max == 60}" class="controls-button" ng-click="setTimerMax(60)">
+                        </a>
+                    </div>
+                    <div class="col s4">
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           :class="{active: timer.max == 60}"
+                           @click="setTimerMax(60)">
                             1m
-                        </button>
-                    </li>
-                    <li>
-                        <button ng-class="{active: timer.max == 120}" class="controls-button" ng-click="setTimerMax(120)">
+                        </a>
+                    </div>
+                    <div class="col s4">
+                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
+                           :class="{active: timer.max == 120}"
+                           @click="setTimerMax(120)">
                             2m
-                        </button>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div id="content">
-        <img ng-show="pictureSrc" id ="drawing" ng-src="{{ pictureSrc }}" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div id="boards">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="border-wrap">
+                            <div class="border"></div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="boards">
+                    <div class="row">
+                        <div class="col s12" v-for="board in boards">
+                            <label>
+                                <input type="checkbox" v-model="board.selected">
+                                <span>{{ board.name }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="border-wrap">
+                            <div class="border"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m10" id="content">
+            <img v-if="src" src="" :src="src" id="drawing" alt="drawing">
+        </div>
     </div>
 </div>
 {% endverbatim %}
 </body>
-<script src="{% static 'dash_pictures/node_modules/angular/angular.js' %}"></script>
-<script src="{% static 'dash_pictures/js/app.js' %}"></script>
+<link rel="stylesheet" href="{% static 'dash_pictures/node_modules/materialize-css/dist/css/materialize.min.css' %}">
 <link rel="stylesheet" href="{% static 'dash_pictures/css/app.css' %}">
+
+<script src="{% static 'dash_pictures/node_modules/vue/dist/vue.js' %}"></script>
+<script src="{% static 'dash_pictures/node_modules/axios/dist/axios.js' %}"></script>
+<script src="{% static 'dash_pictures/node_modules/materialize-css/dist/js/materialize.min.js' %}"></script>
+
+<script src="{% static 'dash_pictures/js/app.js' %}"></script>
 </html>

@@ -88,4 +88,4 @@ def get_boards(user_id, access_token):
         ))
 
     Board.objects.bulk_create(boards)
-    get_pins.delay(user_id, access_token)
+    get_pins(user_id, access_token)
