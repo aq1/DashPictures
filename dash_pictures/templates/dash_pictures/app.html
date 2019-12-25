@@ -74,27 +74,36 @@
                 </div>
             </div>
             <div id="boards">
-                <div class="row">
-                    <div class="col s12">
-                        <div class="border-wrap">
-                            <div class="border"></div>
-                        </div>
-                    </div>
-                </div>
-                <div>
+                <div v-if="boardsUser.length">
                     <div class="row">
-                        <div class="col s12" v-for="board in boardsUser">
-                            <label>
-                                <input type="checkbox" v-model="board.selected">
-                                <span>{{ board.name }}</span>
-                            </label>
+                        <div class="col s12">
+                            <div class="border-wrap">
+                                <div class="border"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col s12" v-for="board in boardsUser">
+                                <label>
+                                    <input type="checkbox" v-model="board.selected">
+                                    <span>{{ board.name }}</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col s12">
-                        <div class="border-wrap">
-                            <div class="border"></div>
+                <div v-if="boardsDefault.length">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="border-wrap">
+                                <div class="border"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <span>Predefined boards</span>
                         </div>
                     </div>
                 </div>

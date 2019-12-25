@@ -28,10 +28,10 @@ let app = new Vue({
             return this.boards.filter(board => board.selected);
         },
         boardsUser: function () {
-            return this.boards.filter(board => !board.default);
+            return this.boards.filter(board => !board.predefined);
         },
         boardsDefault: function () {
-            return this.boards.filter(board => board.default);
+            return this.boards.filter(board => board.predefined);
         },
     },
     methods: {
@@ -92,7 +92,7 @@ let app = new Vue({
         _axios.get('get_boards/').then(
             function (response) {
                 view.boards = response.data.data.map(function (board) {
-                    board.selected = true;
+                    board.selected = !board.predefined;
                     board.pins = [];
                     return board;
                 });
