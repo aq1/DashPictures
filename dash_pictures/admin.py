@@ -10,13 +10,13 @@ from dash_pictures.models import (
 @admin.register(PinterestUser)
 class PinterestUserAdmin(admin.ModelAdmin):
 
-    list_display = '__str__', 'pinterest_id', 'access_token'
+    list_display = '__str__', 'pinterest_id',
 
 
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
 
-    list_display = '__str__', 'user'
+    list_display = '__str__', 'user', 'predefined'
 
 
 @admin.register(Pin)

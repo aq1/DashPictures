@@ -68,10 +68,13 @@ let app = new Vue({
             if (!this.boardsSelected) {
                 return;
             }
-            _axios.get('get_pin/', {params: {boards: this.boardsSelected}}).then(function (r) {
-                view.src = r.data.image_url;
-                view.resume();
-            });
+            _axios.get(
+                'get_pin/',
+                {params: {boards: this.boardsSelected.map(board => board.id)}}).then(
+                function (r) {
+                    view.src = r.data.image_url;
+                    view.resume();
+                });
 
         },
         setTimerMax: function (value) {
