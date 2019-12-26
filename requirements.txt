@@ -3,3 +3,4 @@ requests
 redis
 psycopg2
 tqdm
+sentry-sdk
