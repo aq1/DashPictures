@@ -13,10 +13,10 @@ from dash_pictures.views import (
 
 urlpatterns = [
     path('a/', admin.site.urls),
-    path('tasks/', background_task_view),
-    path('oauth/', oauth_view),
-    path('login/', login_view),
-    path('api/get_boards/', get_boards),
-    path('api/get_pin/', get_pin),
-    path('', index_view),
+    path('tasks/', background_task_view, name='task'),
+    path('oauth/', oauth_view, name='oauth'),
+    path('login/', login_view, name='login'),
+    path('api/get_boards/', get_boards, name='get_boards'),
+    path('api/get_pin/', get_pin, name='get_pin'),
+    path('', index_view, name='index'),
 ]

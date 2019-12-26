@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="app">
-    <form action="/login/" method="post">
+    <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <button type="submit" class="pinterest-login-button">
             Log In with Pinterest
