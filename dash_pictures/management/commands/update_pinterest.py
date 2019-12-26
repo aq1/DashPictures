@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 import tqdm
 
 from dash_pictures.tasks.pinterest_tasks import (
-    get_boards,
+    get_pinterest,
 )
 from dash_pictures.models import (
     PinterestUser,
@@ -15,4 +15,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for user in tqdm.tqdm(PinterestUser.objects.all()):
-            get_boards(user.user_id, user.access_token)
+            get_pinterest(user.user_id, user.access_token)

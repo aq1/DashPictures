@@ -136,4 +136,8 @@ def get_boards(user_id, access_token):
         Board.objects.filter(user_id=user_id).delete()
         Board.objects.bulk_create(boards)
 
-    get_pins.delay(user_id, access_token)
+
+@background_task
+def get_pinterest(user_id, access_token):
+    get_boards(user_id, access_token)
+    get_pins(user_id, access_token)
