@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 from dash_pictures.views import (
-
     index_view,
     oauth_view,
     login_view,

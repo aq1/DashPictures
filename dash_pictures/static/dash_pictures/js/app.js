@@ -1,5 +1,5 @@
 const _axios = axios.create({
-    baseURL: '/api/',
+    baseURL: '/dash_pictures/api/',
     timeout: 1000,
     withCredentials: true,
     headers: {
