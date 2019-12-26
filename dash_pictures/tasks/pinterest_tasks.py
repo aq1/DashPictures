@@ -84,7 +84,7 @@ def get_pins(user_id, access_token):
             })
 
         if response.status_code != 200:
-            return
+            raise requests.HTTPError(response.text)
 
         response = response.json()
 
@@ -111,7 +111,7 @@ def get_pins(user_id, access_token):
 def get_boards(user_id, access_token):
     from dash_pictures.models import Board
 
-    r = requests.get(
+    response = requests.get(
         'https://api.pinterest.com/v1/me/boards/',
         params={
             'access_token': access_token,
@@ -120,8 +120,8 @@ def get_boards(user_id, access_token):
         }
     )
 
-    if r.status_code != 200:
-        return
+    if response.status_code != 200:
+        raise requests.HTTPError(response.text)
 
     boards = [
         Board(
@@ -129,7 +129,7 @@ def get_boards(user_id, access_token):
             pinterest_id=board['id'],
             name=board['name'],
         )
-        for board in r.json()['data']
+        for board in response.json()['data']
     ]
 
     with transaction.atomic():

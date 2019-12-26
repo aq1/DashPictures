@@ -12,6 +12,7 @@ const _axios = axios.create({
 let app = new Vue({
     el: '#app',
     data: {
+        showMenuMobile: true,
         noBoardsMessage: 'No boards found',
         boardsDownloading: true,
         boards: [],
@@ -41,26 +42,25 @@ let app = new Vue({
             clearInterval(this.timer.promise);
         },
         resume: function () {
-            this.timer.isPaused = false;
-            let view = this;
             clearInterval(this.timer.promise);
-            if (!view.src) {
+            if (!this.src) {
                 this.next();
                 return;
             }
-            this.timer.promise = setInterval(function () {
-                if (!view.src || view.timer.isPaused) {
+            this.timer.isPaused = false;
+            this.showMenuMobile = false;
+            this.timer.promise = setInterval(() => {
+                if (!this.src || this.timer.isPaused) {
                     return;
                 }
-                view.timer._value -= 1;
-                view.timer.value = 100 * (view.timer._value / view.timer.max);
-                if (view.timer._value <= 0) {
-                    view.next();
+                this.timer._value -= 1;
+                this.timer.value = 100 * (this.timer._value / this.timer.max);
+                if (this.timer._value <= 0) {
+                    this.next();
                 }
             }, 1000);
         },
         next: function () {
-            let view = this;
             this.timer.value = 100;
             this.timer._value = this.timer.max;
             clearInterval(this.timer.promise);
@@ -71,12 +71,11 @@ let app = new Vue({
             }
             _axios.get(
                 'get_pin/',
-                {params: {boards: this.boardsSelected.map(board => board.id)}}).then(
-                function (r) {
-                    view.src = r.data.image_url;
-                    view.resume();
-                });
-
+                {params: {boards: this.boardsSelected.map(board => board.id)}}).then(r => {
+                    this.src = r.data.image_url;
+                    this.resume();
+                }, _ => M.toast({html: 'Failed to get a pin'})
+            );
         },
         setTimerMax: function (value) {
             this.timer.max = value;
