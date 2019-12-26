@@ -74,6 +74,32 @@
                 </div>
             </div>
             <div id="boards">
+                <div v-if="boardsDownloading">
+                    <div class="loading">
+                        <div class="row">
+                            <div class="col s12">
+                                <span>Getting your boards...</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="preloader-wrapper small active">
+                                    <div class="spinner-layer spinner-green-only">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div v-if="boardsUser.length">
                     <div class="row">
                         <div class="col s12">

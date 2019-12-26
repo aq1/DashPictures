@@ -58,7 +58,7 @@ def oauth_view(request):
     else:
         return JsonResponse({'error': 'Could not log in'}, status=400)
 
-    request.session['get_boards_task_id'] = pinterest_tasks.get_boards(request.user.id, access_token)
+    request.session['get_boards_task_id'] = pinterest_tasks.get_boards.delay(request.user.id, access_token)
     return redirect(index_view)
 
 

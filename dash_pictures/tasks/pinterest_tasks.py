@@ -1,17 +1,66 @@
-import os
+import uuid
+import datetime
+import threading
 
 import requests
 
-from celery import Celery, shared_task
+
+class BackgroundTask:
+    """
+    I got tired of Celery.
+    """
+
+    tasks = {}
+
+    STARTED = 'STARTED'
+    DONE = 'DONE'
+    ERROR = 'ERROR'
+
+    def __init__(self, task):
+        self.task = task
+
+    def __call__(self, *args, **kwargs):
+        return self.task(*args, **kwargs)
+
+    def update_task(self, task_id, status, result):
+        self.tasks[task_id] = {
+            'name': self.task.__name__,
+            'updated': datetime.datetime.now(),
+            'status': status,
+            'result': result,
+        }
+
+    def thread_task(self, task_id, *args, **kwargs):
+        self.update_task(task_id, self.STARTED, None)
+        try:
+            result = self.task(*args, **kwargs)
+        except Exception as e:
+            self.update_task(task_id, self.ERROR, e)
+        else:
+            self.update_task(task_id, self.DONE, result)
+
+    def delay(self, *args, **kwargs):
+        task_id = str(uuid.uuid4())
+        thread = threading.Thread(
+            target=self.thread_task,
+            args=[task_id] + list(args),
+            kwargs=kwargs,
+        )
+        thread.start()
+        return task_id
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
-app = Celery('pinterest')
-app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
+background_task = BackgroundTask
 
 
-@shared_task()
+@background_task
+def test(user):
+    import time
+    time.sleep(5)
+    return user.username
+
+
+@background_task
 def get_pins(user_id, access_token):
     from dash_pictures.models import Board, Pin
 
@@ -60,7 +109,7 @@ def get_pins(user_id, access_token):
     Pin.objects.bulk_create(pins)
 
 
-@shared_task()
+@background_task
 def get_boards(user_id, access_token):
     from dash_pictures.models import Board
 
@@ -88,4 +137,4 @@ def get_boards(user_id, access_token):
         ))
 
     Board.objects.bulk_create(boards)
-    get_pins(user_id, access_token)
+    get_pins.delay(user_id, access_token)

@@ -1,18 +1,3 @@
-"""dash_pictures URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 
@@ -23,10 +8,12 @@ from dash_pictures.views import (
     login_view,
     get_boards,
     get_pin,
+    background_task_view,
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('a/', admin.site.urls),
+    path('tasks/', background_task_view),
     path('oauth/', oauth_view),
     path('login/', login_view),
     path('api/get_boards/', get_boards),

@@ -1,12 +1,25 @@
+import time
+
 from django.http import JsonResponse
-from django.db import models
 from django.contrib.auth.decorators import login_required
 
 from dash_pictures.models import Board, Pin
+from dash_pictures.tasks.pinterest_tasks import background_task
 
 
 @login_required(login_url='/')
 def get_boards(request):
+    if request.session.get('get_boards_task_id') and background_task.tasks.get(request.session['get_boards_task_id']):
+        # this is fine
+        while True:
+            task = background_task.tasks[request.session['get_boards_task_id']]
+            if task['status'] == background_task.STARTED:
+                time.sleep(1)
+                continue
+            if task['status'] == background_task.ERROR:
+                return JsonResponse(status=400)
+            break
+
     boards = Board.objects.filter_user_and_predefined(request.user).values()
 
     return JsonResponse({'data': list(boards)})

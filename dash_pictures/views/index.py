@@ -8,5 +8,4 @@ def index_view(request):
             request,
             'dash_pictures/app.html',
         )
-
     return render(request, 'dash_pictures/index.html')

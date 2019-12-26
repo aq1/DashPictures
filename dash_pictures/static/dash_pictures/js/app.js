@@ -13,6 +13,7 @@ let app = new Vue({
     el: '#app',
     data: {
         noBoardsMessage: 'No boards found',
+        boardsDownloading: true,
         boards: [],
         src: null,
         timer: {
@@ -101,8 +102,10 @@ let app = new Vue({
                 }
             },
             function () {
-                console.log('Error getting boards');
+                M.toast({html: 'Error getting boards'});
             }
-        );
+        ).finally(function () {
+            view.boardsDownloading = false;
+        });
     }
 });
