@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from dash_pictures.views import (
 
@@ -19,4 +19,9 @@ urlpatterns = [
     path('api/get_boards/', get_boards, name='get_boards'),
     path('api/get_pin/', get_pin, name='get_pin'),
     path('', index_view, name='index'),
+]
+
+
+urlpatterns = [
+    path('dash_pictures/', include(urlpatterns)),
 ]
