@@ -17,7 +17,7 @@ def get_boards(request):
                 time.sleep(1)
                 continue
             if task['status'] == background_task.ERROR:
-                return JsonResponse(status=400)
+                return JsonResponse({}, status=400)
             break
 
     boards = Board.objects.filter_user_and_predefined(request.user).values()
@@ -44,7 +44,8 @@ def get_pin(request):
         pins_history = []
         pin = _get_random_pin(request.user.id, boards, pins_history)
         if not pin:
-            return JsonResponse({'status': 'No pin found'}, status=400)
+            return JsonResponse(
+                {'status': 'No pin found'}, status=400)
 
     pins_history.append(pin['id'])
     request.session['pins_history'] = pins_history
