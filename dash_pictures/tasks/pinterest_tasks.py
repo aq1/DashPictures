@@ -66,6 +66,7 @@ def test(user):
 def get_pins(user_id, access_token):
     from dash_pictures.models import Board, Pin
 
+    error = False
     pins = {}
     existing_pins = {p.pinterest_id for p in Pin.objects.filter(board__user_id=user_id).only('pinterest_id')}
     boards = {
@@ -85,7 +86,8 @@ def get_pins(user_id, access_token):
             })
 
         if response.status_code != 200:
-            raise requests.HTTPError(response.text)
+            error = True
+            break
 
         response = response.json()
 
@@ -103,10 +105,13 @@ def get_pins(user_id, access_token):
             break
 
     to_delete = existing_pins - pins.keys()
-    to_create = filter(lambda p: p['id'] not in existing_pins, pins)
+    to_create = filter(lambda p: p.pinterest_id not in existing_pins, pins.values())
     with transaction.atomic():
         Pin.objects.filter(pinterest_id__in=to_delete).delete()
         Pin.objects.bulk_create(to_create, batch_size=1000)
+
+    if error:
+        raise requests.HTTPError(response.text)
 
 
 @background_task
