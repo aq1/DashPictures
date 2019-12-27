@@ -29,6 +29,10 @@ class Board(models.Model):
     name = models.CharField(
         max_length=255,
     )
+    deleted = models.BooleanField(
+        default=False,
+        blank=True,
+    )
 
     objects = BoardQuerySet.as_manager()
 

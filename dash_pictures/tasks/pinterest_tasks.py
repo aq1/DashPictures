@@ -66,7 +66,8 @@ def test(user):
 def get_pins(user_id, access_token):
     from dash_pictures.models import Board, Pin
 
-    pins = []
+    pins = {}
+    existing_pins = {p.pinterest_id for p in Pin.objects.filter(board__user_id=user_id).only('pinterest_id')}
     boards = {
         board.pinterest_id: board.id
         for board in Board.objects.filter(user_id=user_id)
@@ -79,7 +80,7 @@ def get_pins(user_id, access_token):
             params={
                 'cursor': cursor,
                 'access_token': access_token,
-                'fields': 'id,board(id),image,color',
+                'fields': 'id,board(id),image,link,color',
                 'limit': 100
             })
 
@@ -89,22 +90,23 @@ def get_pins(user_id, access_token):
         response = response.json()
 
         for pin in response['data']:
-            pins.append(
-                Pin(
-                    pinterest_id=pin['id'],
-                    board_id=boards[pin['board']['id']],
-                    image_url=pin['image']['original']['url'],
-                    color=pin['color'],
-                )
+            pins[pin['id']] = Pin(
+                pinterest_id=pin['id'],
+                board_id=boards[pin['board']['id']],
+                image_url=pin['image']['original']['url'],
+                link=pin['link'],
+                color=pin['color'],
             )
 
         cursor = response.get('page', {}).get('cursor')
         if not cursor:
             break
 
+    to_delete = existing_pins - pins.keys()
+    to_create = filter(lambda p: p['id'] not in existing_pins, pins)
     with transaction.atomic():
-        Pin.objects.filter(board_id__in=boards.values()).delete()
-        Pin.objects.bulk_create(pins)
+        Pin.objects.filter(pinterest_id__in=to_delete).delete()
+        Pin.objects.bulk_create(to_create, batch_size=1000)
 
 
 @background_task
@@ -123,18 +125,21 @@ def get_boards(user_id, access_token):
     if response.status_code != 200:
         raise requests.HTTPError(response.text)
 
-    boards = [
-        Board(
+    existing_boards = {b.pinterest_id for b in Board.objects.filter(user_id=user_id).only('pinterest_id').all()}
+    boards = {
+        board['id']: Board(
             user_id=user_id,
             pinterest_id=board['id'],
             name=board['name'],
         )
         for board in response.json()['data']
-    ]
+    }
 
+    to_delete = existing_boards - boards.keys()
+    to_create = filter(lambda b: b.pinterest_id not in existing_boards, boards.values())
     with transaction.atomic():
-        Board.objects.filter(user_id=user_id).delete()
-        Board.objects.bulk_create(boards)
+        Board.objects.filter(pinterest_id__in=to_delete).update(deleted=True)
+        Board.objects.bulk_create(to_create)
 
 
 @background_task

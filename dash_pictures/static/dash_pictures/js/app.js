@@ -49,16 +49,17 @@ let app = new Vue({
             }
             this.timer.isPaused = false;
             this.showMenuMobile = false;
+            const timerStep = 0.1;
             this.timer.promise = setInterval(() => {
                 if (!this.src || this.timer.isPaused) {
                     return;
                 }
-                this.timer._value -= 1;
+                this.timer._value -= timerStep;
                 this.timer.value = 100 * (this.timer._value / this.timer.max);
                 if (this.timer._value <= 0) {
                     this.next();
                 }
-            }, 1000);
+            }, timerStep * 1000);
         },
         next: function () {
             this.timer.value = 100;

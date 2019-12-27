@@ -17,11 +17,27 @@ class PinQuerySet(models.QuerySet):
 
 
 class Pin(models.Model):
-    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='pins')
-    pinterest_id = models.CharField(max_length=255, unique=True)
+    board = models.ForeignKey(
+        Board,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=False,
+        related_name='pins',
+    )
+    pinterest_id = models.CharField(
+        max_length=255,
+        unique=True,
+    )
 
-    image_url = models.CharField(max_length=255)
-    color = models.CharField(max_length=255)
+    image_url = models.CharField(
+        max_length=255,
+    )
+    color = models.CharField(
+        max_length=255,
+    )
+    link = models.CharField(
+        max_length=255,
+    )
 
     objects = PinQuerySet.as_manager()
 
