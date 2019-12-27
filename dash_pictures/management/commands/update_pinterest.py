@@ -13,6 +13,17 @@ from dash_pictures.models import (
 class Command(BaseCommand):
     help = 'Update users boards and pins'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'user',
+            nargs='?',
+            help='User Id',
+        )
+
     def handle(self, *args, **options):
-        for user in tqdm.tqdm(PinterestUser.objects.all()):
+        users = PinterestUser.objects.all()
+        if options['user']:
+            users = users.filter(user_id=options['user'])
+
+        for user in tqdm.tqdm(users):
             get_pinterest(user.user_id, user.access_token)
