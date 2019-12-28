@@ -16,7 +16,7 @@ let app = new Vue({
         noBoardsMessage: 'No boards found',
         boardsDownloading: true,
         boards: [],
-        src: null,
+        pin: {},
         timer: {
             max: 60,
             promise: null,
@@ -43,7 +43,7 @@ let app = new Vue({
         },
         resume: function () {
             clearInterval(this.timer.promise);
-            if (!this.src) {
+            if (!this.pin.image_url) {
                 this.next();
                 return;
             }
@@ -51,7 +51,7 @@ let app = new Vue({
             this.showMenuMobile = false;
             const timerStep = 0.1;
             this.timer.promise = setInterval(() => {
-                if (!this.src || this.timer.isPaused) {
+                if (!this.pin.image_url || this.timer.isPaused) {
                     return;
                 }
                 this.timer._value -= timerStep;
@@ -66,14 +66,14 @@ let app = new Vue({
             this.timer._value = this.timer.max;
             clearInterval(this.timer.promise);
 
-            this.src = null;
+            this.pin = {};
             if (!this.boardsSelected) {
                 return;
             }
             _axios.get(
                 'get_pin/',
                 {params: {boards: this.boardsSelected.map(board => board.id)}}).then(r => {
-                    this.src = r.data.image_url;
+                    this.pin = r.data;
                     this.resume();
                 }, _ => M.toast({html: 'Failed to get a pin'})
             );
@@ -90,7 +90,7 @@ let app = new Vue({
     },
     created: function () {
         let view = this;
-        _axios.get('get_boards/').then(
+        _axios.get('get_boards/', {timeout: 10000}).then(
             function (response) {
                 view.boards = response.data.data.map(function (board) {
                     board.selected = !board.predefined;

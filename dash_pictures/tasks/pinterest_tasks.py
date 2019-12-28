@@ -104,7 +104,7 @@ def get_pins(user_id, access_token):
         if not cursor:
             break
 
-    to_delete = existing_pins - pins.keys()
+    to_delete = existing_pins - pins.keys() if pins else []
     to_create = filter(lambda p: p.pinterest_id not in existing_pins, pins.values())
     with transaction.atomic():
         Pin.objects.filter(pinterest_id__in=to_delete).delete()
