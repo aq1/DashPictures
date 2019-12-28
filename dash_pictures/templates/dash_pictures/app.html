@@ -6,12 +6,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="stylesheet" href="{% static 'dash_pictures/css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'dash_pictures/node_modules/materialize-css/dist/css/materialize.min.css' %}">
+
     <title>Dash Pictures. Practice drawing using Pinterest boards</title>
 </head>
 <body>
 {% verbatim %}
 <div id="app">
-    <div class="row">
+    <div id="preload" class="valign-wrapper center-align" v-if="!appLoaded">
+        <div style="height: 100%; width: 100%">
+            <p>Loading application...</p>
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="display: none" :style="{display: appLoaded ? '' : 'none'}">
         <div class="col s12 m12 left hide-on-large-only" :class="{hide: showMenuMobile}">
             <a class="waves-effect waves-teal btn-flat" @click="showMenuMobile = true">
                 <i class="material-icons">menu</i>
@@ -183,9 +205,6 @@
 </div>
 {% endverbatim %}
 </body>
-<link rel="stylesheet" href="{% static 'dash_pictures/node_modules/materialize-css/dist/css/materialize.min.css' %}">
-<link rel="stylesheet" href="{% static 'dash_pictures/css/app.css' %}">
-
 <script src="{% static 'dash_pictures/node_modules/vue/dist/vue.js' %}"></script>
 <script src="{% static 'dash_pictures/node_modules/axios/dist/axios.js' %}"></script>
 <script src="{% static 'dash_pictures/node_modules/materialize-css/dist/js/materialize.min.js' %}"></script>

@@ -17,6 +17,7 @@ let app = new Vue({
         boardsDownloading: true,
         boards: [],
         pin: {},
+        appLoaded: false,
         timer: {
             max: 60,
             promise: null,
@@ -89,6 +90,7 @@ let app = new Vue({
         },
     },
     created: function () {
+        this.appLoaded = true;
         _axios.get('get_boards/', {timeout: 10000}).then(
             response => {
                 this.boards = response.data.data.map(function (board) {
