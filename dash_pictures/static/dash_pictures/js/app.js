@@ -89,23 +89,22 @@ let app = new Vue({
         },
     },
     created: function () {
-        let view = this;
         _axios.get('get_boards/', {timeout: 10000}).then(
-            function (response) {
-                view.boards = response.data.data.map(function (board) {
+            response => {
+                this.boards = response.data.data.map(function (board) {
                     board.selected = !board.predefined;
                     board.pins = [];
                     return board;
                 });
-                if (view.boards.length) {
-                    view.noBoardsMessage = 'No boards found';
+                if (this.boards.length) {
+                    this.noBoardsMessage = 'No boards found';
                 }
             },
             function () {
                 M.toast({html: 'Error getting boards'});
             }
-        ).finally(function () {
-            view.boardsDownloading = false;
+        ).finally(() => {
+            this.boardsDownloading = false;
         });
     }
 });

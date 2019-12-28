@@ -11,6 +11,7 @@ import requests
 from dash_pictures.models import PinterestUser
 from dash_pictures.views import index_view
 from dash_pictures.tasks import pinterest_tasks
+from dash_pictures.models import Board
 
 
 def oauth_view(request):
@@ -58,7 +59,9 @@ def oauth_view(request):
     else:
         return JsonResponse({'error': 'Could not log in'}, status=400)
 
-    request.session['get_boards_task_id'] = pinterest_tasks.get_pinterest.delay(request.user.id, access_token)
+    if not Board.objects.filter(user_id=user.id).exists():
+        request.session['get_boards_task_id'] = pinterest_tasks.get_pinterest.delay(request.user.id, access_token)
+
     return redirect(index_view)
 
 
