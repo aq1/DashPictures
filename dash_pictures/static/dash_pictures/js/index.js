@@ -1,4 +1,10 @@
-const _axios = axios.create({
+import axios from 'axios';
+import Vue from 'vue';
+
+import dashPictures from './components/dash_pictures';
+
+
+window.axios = axios.create({
     baseURL: '/dash_pictures/api/',
     timeout: 1000,
     withCredentials: true,
@@ -9,8 +15,19 @@ const _axios = axios.create({
 });
 
 
-let app = new Vue({
+window.Event = new Vue();
+
+
+new Vue({
     el: '#app',
+    components: {
+        dashPictures
+    }
+});
+
+
+/*
+* ,
     data: {
         showMenuMobile: true,
         noBoardsMessage: 'No boards found',
@@ -109,4 +126,5 @@ let app = new Vue({
             this.boardsDownloading = false;
         });
     }
-});
+}
+* */

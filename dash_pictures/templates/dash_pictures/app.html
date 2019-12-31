@@ -1,22 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta content="charset=utf-8">
 
 {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" href="{% static 'dash_pictures/css/app.css' %}">
-    <link rel="stylesheet" href="{% static 'dash_pictures/node_modules/materialize-css/dist/css/materialize.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'dash_pictures/node_modules/materialize-css/dist/css/materialize.min.css' %}">
 
     <title>Dash Pictures. Practice drawing using Pinterest boards</title>
+
+    <style>
+        html,
+        body {
+            background-color: #ececec;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 20px;
+            line-height: 25px;
+            font-family: "Helvetica Neue", "Helvetica", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", "ＭＳ Ｐゴシック", arial, sans-serif;
+        }
+
+        div#app {
+            margin: 0;
+            padding: 20px 10px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* fallback */
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url({% static 'dash_pictures/css/icons.woff2' %}) format('woff2');
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -moz-font-feature-settings: 'liga';
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
 </head>
 <body>
 {% verbatim %}
 <div id="app">
-    <div id="preload" class="valign-wrapper center-align" v-if="!appLoaded">
-        <div style="height: 100%; width: 100%">
+    <div class="valign-wrapper center-align" :class="{hide: true}">
+        <div style="height: 100%; width: 100%;">
             <p>Loading application...</p>
             <div class="preloader-wrapper big active">
                 <div class="spinner-layer spinner-blue-only">
@@ -33,181 +77,9 @@
             </div>
         </div>
     </div>
-    <div class="row" style="display: none" :style="{display: appLoaded ? '' : 'none'}">
-        <div class="col s12 m12 left hide-on-large-only" :class="{hide: showMenuMobile}">
-            <a class="waves-effect waves-teal btn-flat" @click="showMenuMobile = true">
-                <i class="material-icons">menu</i>
-            </a>
-        </div>
-        <div class="row hide-on-large-only" :class="{hide: showMenuMobile || timer.isPaused}">
-            <div class="col s12 m12">
-                <div class="progress" :class="{disabled: timer.isPaused}">
-                    <div class="determinate" style="width: 100%" :style="{width: timer.value + '%'}"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m12 l2" id="menu" :class="{'hide-on-med-and-down': !showMenuMobile}">
-            <div class="row">
-                <div class="col s12 m12 hide-on-large-only">
-                    <a class="waves-effect waves-teal btn-flat" @click="showMenuMobile = false">
-                        <i class="material-icons">menu</i>
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m12">
-                    <div class="progress" :class="{disabled: timer.isPaused}">
-                        <div class="determinate" style="width: 100%" :style="{width: timer.value + '%'}"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="ctrl-row">
-                <div class="row">
-                    <div class="col s4">
-                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                           :class="{disabled: timer.isPaused}"
-                           @click="addTimerMax(10)"
-                        >+10s</a>
-                    </div>
-                    <div class="col s4">
-                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                           v-if="!timer.isPaused"
-                           @click="pause">
-                            <i class="material-icons">pause</i>
-                        </a>
-                        <a class="btn-floating ctrl-btn"
-                           v-if="timer.isPaused"
-                           :class="{disabled: !boardsSelected.length, pulse: boardsSelected.length}"
-                           @click="resume">
-                            <i class="material-icons">play_arrow</i>
-                        </a>
-                    </div>
-                    <div class="col s4">
-                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                           @click="next"
-                           :class="{disabled: !pin.image_url || !boardsSelected.length, pulse: boardsSelected.length}">
-                            <i class="material-icons">fast_forward</i>
-                        </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s4">
-                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                           :class="{active: timer.max == 30}"
-                           @click="setTimerMax(30)">
-                            30s
-                        </a>
-                    </div>
-                    <div class="col s4">
-                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                           :class="{active: timer.max == 60}"
-                           @click="setTimerMax(60)">
-                            1m
-                        </a>
-                    </div>
-                    <div class="col s4">
-                        <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                           :class="{active: timer.max == 120}"
-                           @click="setTimerMax(120)">
-                            2m
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div id="boards">
-                <div v-if="boardsDownloading">
-                    <div class="loading">
-                        <div class="row">
-                            <div class="col s12 m12">
-                                <span>Getting your boards...</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m12">
-                                <div class="preloader-wrapper small active">
-                                    <div class="spinner-layer spinner-green-only">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="boardsUser.length">
-                    <div class="row">
-                        <div class="col s12 m12">
-                            <div class="border-wrap">
-                                <div class="border"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="row">
-                            <div class="col s12 m12" v-for="board in boardsUser">
-                                <label>
-                                    <input type="checkbox" v-model="board.selected">
-                                    <span>{{ board.name }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="boardsDefault.length">
-                    <div class="row">
-                        <div class="col s12 m12">
-                            <div class="border-wrap">
-                                <div class="border"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12 m12">
-                            <span>Predefined boards</span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="row">
-                        <div class="col s12 m12" v-for="board in boardsDefault">
-                            <label>
-                                <input type="checkbox" v-model="board.selected">
-                                <span>{{ board.name }}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m12 l10" id="content">
-            <img :class="{'hide-on-med-and-down': showMenuMobile}"
-                 v-if="pin.image_url"
-                 src=""
-                 :src="pin.image_url"
-                 id="drawing"
-                 alt="drawing">
-            <div class="row">
-                <div class="col s12" v-if="pin.image_url && pin.link">
-                    <span>
-                        <a :href="pin.link" class="truncate">Source: <i class="material-icons">open_in_new</i></a>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <dash-pictures></dash-pictures>
 </div>
 {% endverbatim %}
 </body>
-<script src="{% static 'dash_pictures/node_modules/vue/dist/vue.js' %}"></script>
-<script src="{% static 'dash_pictures/node_modules/axios/dist/axios.js' %}"></script>
-<script src="{% static 'dash_pictures/node_modules/materialize-css/dist/js/materialize.min.js' %}"></script>
-
-<script src="{% static 'dash_pictures/js/app.js' %}"></script>
+<script src="{% static 'dash_pictures/public/app.js' %}"></script>
 </html>
