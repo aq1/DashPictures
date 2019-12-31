@@ -23,14 +23,15 @@
                     </a>
                     <a class="btn-floating ctrl-btn"
                        v-if="isPaused"
+                       :class="{disabled: !boardsSelected.length, pulse: boardsSelected.length}"
                        @click="resume">
                         <i class="material-icons">play_arrow</i>
                     </a>
                 </div>
                 <div class="col s4">
                     <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                       @click="next">
-                        <!--                       :class="{disabled: !pin.image_url || !boardsSelected.length, pulse: boardsSelected.length}">-->
+                       @click="next"
+                       :class="{disabled: isPaused || !boardsSelected.length, pulse: boardsSelected.length}">
                         <i class="material-icons">fast_forward</i>
                     </a>
                 </div>
@@ -38,21 +39,21 @@
             <div class="row">
                 <div class="col s4">
                     <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                       :class="{active: max == 30}"
+                       :class="{active: max === 30}"
                        @click="setTimerMax(30)">
                         30s
                     </a>
                 </div>
                 <div class="col s4">
                     <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                       :class="{active: max == 60}"
+                       :class="{active: max === 60}"
                        @click="setTimerMax(60)">
                         1m
                     </a>
                 </div>
                 <div class="col s4">
                     <a class="waves-effect waves-teal btn-flat ctrl-btn"
-                       :class="{active: max == 120}"
+                       :class="{active: max === 120}"
                        @click="setTimerMax(120)">
                         2m
                     </a>
@@ -72,6 +73,9 @@
                 value: 100,
                 isPaused: true,
             }
+        },
+        props: {
+            boardsSelected: Array
         },
         methods: {
             pause() {
