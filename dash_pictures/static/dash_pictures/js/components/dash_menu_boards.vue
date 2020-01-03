@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div class="row" v-for="board in boards">
-                <div class="col s12 m12">
+                <div class="col s12 m12 board-label-div">
                     <label>
                         <input type="checkbox" v-model="board.selected">
                         <span>{{ board.name }}</span>
@@ -38,11 +38,20 @@
         width: 90%;
         display: inline-block;
         border-top: 1px solid #a9a9a9;
-        /*padding-top: 10px;*/
     }
 
     div.border-wrap {
         text-align: center;
         width: 100%;
+    }
+
+    .board-label-div label {
+        display: inline-block;
+    }
+
+    @media screen and (max-width: 991px) {
+        .board-label-div {
+            text-align: center;
+        }
     }
 </style>
