@@ -8,6 +8,11 @@
                     </div>
                 </div>
             </div>
+            <div class="row" v-if="isDefault">
+                <div class="col s12 m12">
+                    <span>Predefined boards:</span>
+                </div>
+            </div>
             <div class="row" v-for="board in boards">
                 <div class="col s12 m12 board-label-div">
                     <label>
@@ -24,6 +29,16 @@
     export default {
         props: {
             boards: Array
+        },
+        computed: {
+            isDefault() {
+                for (const board of this.boards) {
+                    if (!board.predefined) {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
     }
 </script>

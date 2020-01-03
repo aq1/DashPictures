@@ -18,6 +18,7 @@
         },
         computed: {
             boardsSelected() {
+                localStorage.boards = JSON.stringify(this.boards);
                 return this.boards.filter(board => board.selected);
             },
             boardsUser() {
@@ -28,15 +29,16 @@
             }
         },
         created() {
+            if (localStorage.boards) {
+                this.boards = JSON.parse(localStorage.boards);
+                return;
+            }
+
             axios.get('get_boards/', {timeout: 10000}).then(
                 response => {
-                    this.boards = response.data.data.map(function (board) {
-                        board.selected = !board.predefined;
-                        board.pins = [];
-                        return board;
-                    });
+                    this.boards = response.data.data;
                     if (this.boards.length) {
-                        this.noBoardsMessage = 'No boards found';
+                        this.boards[0].selected = true;
                     }
                 },
                 function () {
