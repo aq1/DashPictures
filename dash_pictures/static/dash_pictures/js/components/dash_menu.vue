@@ -1,5 +1,5 @@
 <template>
-    <div class="col s12 m12 l2" id="menu" :class="{hide: hideComponentSwitch === false}">
+    <div class="col s12 m12 l2" id="menu" :class="{'hide-on-med-and-down': hideComponentSwitch === false}">
 
         <DashMobileMenuButton :hideComponentSwitch="false"/>
         <DashMenuTimer :boardsSelected="boardsSelected"/>
