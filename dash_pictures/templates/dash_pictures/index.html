@@ -5,6 +5,91 @@
 <head>
     <meta charset="UTF-8">
     <title>Pinterest Drawing Practice</title>
+    <style>
+        html,
+        body {
+            background-color: rgba(0, 0, 0, 0.3);
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 12px;
+            line-height: 14px;
+            font-family: "Helvetica Neue", "Helvetica", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", "ＭＳ Ｐゴシック", arial, sans-serif;
+            background-image: url("https://i.pinimg.com/564x/f8/8e/cb/f88ecb2d3a70bedc7ac42c0299038c3f.jpg");
+        }
+
+        div.app-index {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        div.app-index form {
+            display: flex;
+            flex-flow: column;
+        }
+
+        button.pinterest-login-button {
+            height: 100%;
+            width: 100%;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border: 0;
+            color: #FFFFFF;
+            font-family: Open Sans;
+            font-size: 25px;
+            font-weight: 400;
+            padding: 25px;
+            background-color: #bd081c;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button.pinterest-login-button:hover {
+            background: #A82727;
+            text-decoration: none;
+        }
+
+        div.image-source-wrapper {
+            position: absolute;
+            align-self: flex-end;
+            text-align: right;
+            width: 100%;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+
+        div.image-source-wrapper button.image-source {
+            font-size: 10px;
+            background-color: transparent;
+            color: black;
+            border: 1px solid black;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        div.image-source-wrapper button.image-source:hover {
+            background-color: rgba(0, 0, 0, 0.39);
+        }
+
+        label.tos {
+            text-decoration: none;
+            font-size: 15px;
+            background-color: rgba(239, 239, 239, 0.4);
+            padding: 10px;
+            border-radius: 5px;
+            color: black;
+        }
+
+        label.tos:hover {
+            background-color: rgba(239, 239, 239, 0.7);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div class="app-index">
@@ -13,6 +98,11 @@
         <button type="submit" class="pinterest-login-button">
             Log In with Pinterest
         </button>
+        <label class="tos">
+            <input type="checkbox" required>
+            Agree to the <a href="{% url 'tos' %}" target="_blank">Terms Of Service</a>
+        </label>
+
     </form>
     <div class="image-source-wrapper">
         <a href="https://www.pinterest.ru/pin/736479345288262033/" target="_blank">
@@ -21,5 +111,4 @@
     </div>
 </div>
 </body>
-<link rel="stylesheet" href="{% static 'dash_pictures/css/index.css' %}">
 </html>
