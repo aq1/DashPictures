@@ -6,13 +6,8 @@ from dash_pictures.models import Board
 class PinQuerySet(models.QuerySet):
     def filter_user_and_predefined(self, user_id, boards):
         return self.filter(
-            models.Q(
-                board__user_id=user_id,
-                board_id__in=boards,
-            ) | models.Q(
-                board__predefined=True,
-            ),
-
+            models.Q(board__user_id=user_id) | models.Q(board__predefined=True),
+            board_id__in=boards,
         )
 
 
