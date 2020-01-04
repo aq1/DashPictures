@@ -1,20 +1,16 @@
 <template>
     <div id="boards">
         <div v-if="boards.length">
-            <div class="row">
+            <div class="row boards-header" @click="hideBoards = !hideBoards">
                 <div class="col s12 m12">
-                    <div class="border-wrap">
-                        <div class="border"></div>
-                    </div>
+                    <i class="material-icons" v-if="!hideBoards">arrow_drop_up</i>
+                    <i class="material-icons" v-if="hideBoards">arrow_drop_down</i>
+                    <span v-if="isDefault">Predefined boards</span>
+                    <span v-if="!isDefault">My boards</span>
                 </div>
             </div>
-            <div class="row" v-if="isDefault">
+            <div class="row board-row" v-for="board in boards" v-if="!hideBoards">
                 <div class="col s12 m12">
-                    <span>Predefined boards:</span>
-                </div>
-            </div>
-            <div class="row" v-for="board in boards">
-                <div class="col s12 m12 board-label-div">
                     <label>
                         <input type="checkbox" v-model="board.selected">
                         <span>{{ board.name }}</span>
@@ -27,6 +23,11 @@
 
 <script>
     export default {
+        data() {
+            return {
+                hideBoards: false
+            }
+        },
         props: {
             boards: Array
         },
@@ -44,28 +45,34 @@
 </script>
 
 <style scoped>
+    div#boards,
+    div.board-row *,
+    i.material-icons {
+        font-size: 16px;
+    }
+
     label {
         cursor: pointer !important;
         width: 100%;
     }
 
-    div.border-wrap > div.border {
-        width: 90%;
+    .board-row label {
         display: inline-block;
-        border-top: 1px solid #a9a9a9;
     }
 
-    div.border-wrap {
-        text-align: center;
-        width: 100%;
+    .boards-header,
+    .board-row {
+        padding: 5px 0;
+        cursor: pointer;
     }
 
-    .board-label-div label {
-        display: inline-block;
+    .boards-header:hover,
+    .board-row:hover {
+        background-color: #f2f2f2;
     }
 
     @media screen and (max-width: 991px) {
-        .board-label-div {
+        .board-row {
             text-align: center;
         }
     }
