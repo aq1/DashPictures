@@ -64,6 +64,7 @@
     .board-row {
         padding: 5px 0;
         cursor: pointer;
+        margin-bottom: 0;
     }
 
     .boards-header:hover,
