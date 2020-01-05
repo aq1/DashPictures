@@ -71,10 +71,4 @@
     .board-row:hover {
         background-color: #f2f2f2;
     }
-
-    @media screen and (max-width: 991px) {
-        .board-row {
-            text-align: center;
-        }
-    }
 </style>
