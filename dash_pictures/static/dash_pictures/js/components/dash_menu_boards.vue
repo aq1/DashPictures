@@ -11,7 +11,7 @@
             </div>
             <div class="row board-row" v-for="board in boards" v-if="!hideBoards">
                 <div class="col s12 m12">
-                    <label>
+                    <label class="truncate">
                         <input type="checkbox" v-model="board.selected">
                         <span>{{ board.name }}</span>
                     </label>
