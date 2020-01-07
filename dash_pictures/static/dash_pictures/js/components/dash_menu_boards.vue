@@ -5,7 +5,8 @@
                 <div class="col s12 m12">
                     <i class="material-icons" v-if="!hideBoards">arrow_drop_up</i>
                     <i class="material-icons" v-if="hideBoards">arrow_drop_down</i>
-                    <span v-if="isDefault">Predefined boards</span>
+                    <span v-if="isDefault">Animals</span>
+                    <i v-if="isDefault" class="material-icons tooltipped">info_outline</i>
                     <span v-if="!isDefault">My boards</span>
                 </div>
             </div>
@@ -30,6 +31,18 @@
         },
         props: {
             boards: Array
+        },
+        created() {
+            document.addEventListener('DOMContentLoaded', _ => {
+                M.Tooltip.init(
+                    document.querySelectorAll('.tooltipped'),
+                    {
+                        enterDelay: 500,
+                        position: 'top',
+                        html: '<span style="font-size: 16px">We created this default boards</span>',
+                    }
+                );
+            });
         },
         computed: {
             isDefault() {
