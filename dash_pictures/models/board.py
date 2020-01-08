@@ -13,7 +13,7 @@ class BoardQuerySet(models.QuerySet):
 class Board(models.Model):
 
     user = models.ForeignKey(
-        'dash_pictures.Board',
+        'dash_pictures.PinterestUser',
         null=True,
         blank=True,
         on_delete=models.CASCADE,
