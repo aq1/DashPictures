@@ -12,9 +12,15 @@ class PinInline(admin.StackedInline):
     extra = 0
 
 
+class BoardInline(admin.StackedInline):
+    model = Board
+    extra = 0
+
+
 @admin.register(PinterestUser)
 class PinterestUserAdmin(admin.ModelAdmin):
     list_display = '__str__', 'pinterest_id',
+    inlines = [BoardInline]
 
 
 @admin.register(Board)
