@@ -7,12 +7,12 @@ from dash_pictures.models import (
 )
 
 
-class PinInline(admin.StackedInline):
+class PinInline(admin.TabularInline):
     model = Pin
     extra = 0
 
 
-class BoardInline(admin.StackedInline):
+class BoardInline(admin.TabularInline):
     model = Board
     extra = 0
 
