@@ -29,9 +29,13 @@ class Pin(models.Model):
     )
     color = models.CharField(
         max_length=255,
+        blank=True,
+        default='#000000'
     )
     link = models.CharField(
         max_length=255,
+        blank=True,
+        default=''
     )
 
     objects = PinQuerySet.as_manager()

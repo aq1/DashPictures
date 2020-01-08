@@ -6,10 +6,22 @@ from django.contrib.auth.models import User
 
 class PinterestUser(models.Model):
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='pinterest')
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='pinterest',
+    )
 
-    pinterest_id = models.CharField(max_length=255, unique=True)
-    access_token = models.CharField(max_length=255, blank=True, default='')
+    pinterest_id = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+    access_token = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
 
     @classmethod
     def create_or_update(cls, pinterest_id, access_token, first_name, last_name):
