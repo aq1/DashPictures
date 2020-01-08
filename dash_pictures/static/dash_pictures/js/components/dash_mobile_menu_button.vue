@@ -8,12 +8,6 @@
 
 <script>
     export default {
-        created() {
-            Event.$on(['timerResumed', 'timerNextPressed'], () => {
-                Event.$emit('menuButtonClicked', false);
-            });
-
-        },
         props: {
             hideComponentSwitch: Boolean
         },

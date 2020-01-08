@@ -17,7 +17,7 @@
             }
         },
         created() {
-            Event.$on('timerValueChanged', valuePercent => {
+            Event.$on('progressValueChanged', valuePercent => {
                 this.valuePercent = valuePercent;
             });
             Event.$on('timerPaused', isPaused => {

@@ -58,6 +58,7 @@
                     'get_pin/',
                     {params: {boards: this.boardsSelected.map(board => board.id)}}).then(r => {
                         this.pin = r.data;
+                        Event.$emit('resumeTimer');
                     }, _ => M.toast({html: 'Failed to get a pin'})
                 );
             }
