@@ -9,6 +9,7 @@
             <img v-if="pin.image_url"
                  src=""
                  :src="pin.image_url"
+                 :style="{'box-shadow': '0 0 30px ' + pin.color}"
                  id="drawing"
                  alt="drawing">
             <div class="row">
