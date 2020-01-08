@@ -92,7 +92,7 @@
                 clearInterval(this.promise);
                 this.isPaused = true;
             },
-            resume(reset=false) {
+            resume(event, reset=false) {
                 Event.$emit('timerResumed');
                 if (reset) {
                     this.value = this.max;
