@@ -17,10 +17,10 @@ def get_boards(request):
                 time.sleep(1)
                 continue
             if task['status'] == background_task.ERROR:
-                return JsonResponse({}, status=400)
+                return JsonResponse([])
             break
 
-    boards = Board.objects.filter_user_and_predefined(request.user).values()
+    boards = Board.objects.filter_user_and_predefined(request.user.id).values()
 
     return JsonResponse({'data': list(boards)})
 

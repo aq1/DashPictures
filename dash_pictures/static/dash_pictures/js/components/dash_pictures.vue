@@ -31,7 +31,9 @@
         created() {
             if (localStorage.boards) {
                 this.boards = JSON.parse(localStorage.boards);
-                return;
+                if (this.boards.length) {
+                    return;
+                }
             }
 
             axios.get('get_boards/', {timeout: 10000}).then(

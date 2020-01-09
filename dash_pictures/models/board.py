@@ -1,11 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class BoardQuerySet(models.QuerySet):
-    def filter_user_and_predefined(self, user):
+    def filter_user_and_predefined(self, user_id):
         return self.filter(
-            models.Q(user=user) |
+            models.Q(user_id=user_id) |
             models.Q(predefined=True),
         )
 
