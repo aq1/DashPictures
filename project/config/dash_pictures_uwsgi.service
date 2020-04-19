@@ -3,8 +3,8 @@ Description=uWSGI app
 After=syslog.target
 
 [Service]
-#ExecStart=/_projects/dash_pictures/.env/bin/uwsgi --ini /_projects/dash_pictures/project/configs/uwsgi.ini
-ExecStart=/_projects/dash_pictures/.env/bin/python /_projects/dash_pictures/manage.py runserver 0.0.0.0:80
+#ExecStart=/_projects/DashPictures/.env/bin/uwsgi --ini /_projects/DashPictures/project/configs/uwsgi.ini
+ExecStart=/_projects/DashPictures/.env/bin/python /_projects/DashPictures/manage.py runserver 0.0.0.0:80
 User=nginx
 Group=nginx
 Restart=on-failure
