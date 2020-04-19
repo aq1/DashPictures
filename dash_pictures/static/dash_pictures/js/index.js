@@ -6,7 +6,7 @@ import dashPictures from './components/dash_pictures';
 
 
 window.axios = axios.create({
-    baseURL: '/dash_pictures/api/',
+    baseURL: '/api/',
     timeout: 1000,
     withCredentials: true,
     headers: {

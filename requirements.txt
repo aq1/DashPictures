@@ -1,6 +1,6 @@
 django
 requests
 redis
-psycopg2
+psycopg2-binary
 tqdm
 sentry-sdk

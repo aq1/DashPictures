@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.views.generic.base import TemplateView
 
 
@@ -21,9 +21,4 @@ urlpatterns = [
     path('api/get_pin/', get_pin, name='get_pin'),
     path('terms_of_service/', TemplateView.as_view(template_name='dash_pictures/terms_of_service.html'), name='tos'),
     path('', index_view, name='index'),
-]
-
-
-urlpatterns = [
-    path('dash_pictures/', include(urlpatterns)),
 ]
